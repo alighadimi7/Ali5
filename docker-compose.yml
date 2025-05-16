@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: airdrop-hunter
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5433:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+  backend:
+    build: .
+    working_dir: /app
+    environment:
+      DATABASE_URL: postgres://postgres:password@db:5432/airdrop-hunter
+    volumes:
+      - ./:/app
+    depends_on:
+      - db
+volumes:
+  db_data:
